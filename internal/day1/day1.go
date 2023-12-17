@@ -4,6 +4,8 @@ import (
 	"sort"
 	"strconv"
 	"strings"
+
+	"github.com/jenspederm/advent-of-code/internal/utils"
 )
 
 type CalibrationValue struct {
@@ -100,4 +102,32 @@ func (c *CalibrationValue) ReplaceWordDigits() {
 	new_line := strings.Replace(c.line, first_match.key, first_match.value, 1)
 	new_line = strings.Replace(new_line, last_match.key, last_match.value, 1)
 	c.line = new_line
+}
+
+func part1(lines []string) int {
+	calibration_values := NewCalibrationValues(lines)
+	return calibration_values.Sum()
+}
+
+func part2(lines []string) int {
+	calibration_values := NewCalibrationValues(lines)
+	for i := range calibration_values {
+		calibration_values[i].ReplaceWordDigits()
+	}
+	return calibration_values.Sum()
+}
+
+func Run() {
+	lines := utils.LoadText("./data/day1.txt")
+
+	println()
+	println("##############################")
+	println("#            Day 1           #")
+	println("##############################")
+	println()
+	println("Part 1")
+	println(part1(lines))
+
+	println("Part 2")
+	println(part2(lines))
 }
