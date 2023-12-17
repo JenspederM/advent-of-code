@@ -4,7 +4,7 @@ import (
 	"bufio"
 	"os"
 
-	"github.com/jenspederm/advent-of-code/internal"
+	"github.com/jenspederm/advent-of-code/internal/day1"
 )
 
 func main() {
@@ -28,13 +28,13 @@ func main() {
 		panic(err)
 	}
 
-	part1 := internal.NewCalibrationValues(lines)
+	part1 := day1.NewCalibrationValues(lines)
 
 	println("Part 1")
 	println(part1.Sum())
 
 	println("Part 2")
-	part2 := internal.NewCalibrationValues(lines)
+	part2 := day1.NewCalibrationValues(lines)
 	for i := range part2 {
 		part2[i].ReplaceWordDigits()
 	}
