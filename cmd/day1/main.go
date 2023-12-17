@@ -5,10 +5,17 @@ import (
 	"os"
 
 	"github.com/jenspederm/advent-of-code/internal/day1"
+	"github.com/jenspederm/advent-of-code/internal/utils"
 )
 
 func main() {
-	file, err := os.Open("./data/day1.txt")
+	dataPath, err := utils.GetDataPath("./data/day1.txt")
+
+	if err != nil {
+		panic(err)
+	}
+
+	file, err := os.Open(dataPath)
 
 	if err != nil {
 		panic(err)
