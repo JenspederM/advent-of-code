@@ -3,10 +3,12 @@ package main
 import (
 	"bufio"
 	"os"
+
+	"github.com/jenspederm/advent-of-code/internal"
 )
 
 func main() {
-	file, err := os.Open("../data/day1.txt")
+	file, err := os.Open("./data/day1.txt")
 
 	if err != nil {
 		panic(err)
@@ -26,13 +28,13 @@ func main() {
 		panic(err)
 	}
 
-	part1 := NewCalibrationValues(lines)
+	part1 := internal.NewCalibrationValues(lines)
 
 	println("Part 1")
 	println(part1.Sum())
 
 	println("Part 2")
-	part2 := NewCalibrationValues(lines)
+	part2 := internal.NewCalibrationValues(lines)
 	for i := range part2 {
 		part2[i].ReplaceWordDigits()
 	}
