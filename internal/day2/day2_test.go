@@ -15,19 +15,20 @@ func TestRun(t *testing.T) {
 		"Game 5: 6 red, 1 blue, 3 green; 2 blue, 1 red, 2 green",
 	}
 
-	settings := map[string]int{
-		"red":   12,
-		"green": 13,
-		"blue":  14,
-	}
+	t.Run("Part 1", func(t *testing.T) {
+		sum := day2.Part1(testData)
+		expected := 8
+		if sum != expected {
+			t.Errorf("Expected %d, got %d", expected, sum)
+		}
+	})
 
-	games := day2.GamesFromLines(testData, settings)
+	t.Run("Part 2", func(t *testing.T) {
+		sum := day2.Part2(testData)
+		expected := 2286
+		if sum != expected {
+			t.Errorf("Expected %d, got %d", expected, sum)
+		}
+	})
 
-	for _, game := range games {
-		t.Run(game.Name, func(t *testing.T) {
-			if game.IsTooHigh && !(game.Number == 3 || game.Number == 4) {
-				t.Errorf("%s is too high", game.Name)
-			}
-		})
-	}
 }

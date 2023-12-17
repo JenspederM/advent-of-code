@@ -7,6 +7,12 @@ import (
 	"github.com/jenspederm/advent-of-code/internal/utils"
 )
 
+var GameSettings = map[string]int{
+	"red":   12,
+	"green": 13,
+	"blue":  14,
+}
+
 type game struct {
 	Name      string
 	Number    int
@@ -98,11 +104,7 @@ func GamesFromLines(lines []string, settings map[string]int) []game {
 }
 
 func Part1(lines []string) int {
-	games := GamesFromLines(lines, map[string]int{
-		"red":   12,
-		"green": 13,
-		"blue":  14,
-	})
+	games := GamesFromLines(lines, GameSettings)
 
 	sum := 0
 
@@ -116,7 +118,36 @@ func Part1(lines []string) int {
 }
 
 func Part2(lines []string) int {
-	return 0
+	games := GamesFromLines(lines, GameSettings)
+	verbose := false
+	total_sum := 0
+	for _, game := range games {
+		minimums := map[string]int{
+			"red":   0,
+			"green": 0,
+			"blue":  0,
+		}
+
+		for _, round := range game.Rounds {
+			for _, pick := range round.Picks {
+				if minimums[pick.Color] < pick.Count {
+					minimums[pick.Color] = pick.Count
+				}
+			}
+		}
+
+		sum := 1
+		for color, count := range minimums {
+			if verbose {
+				println(game.Name, color, count, "=>", sum, "*=", count, "=>", sum*count)
+			}
+			if count > 0 {
+				sum *= count
+			}
+		}
+		total_sum += sum
+	}
+	return total_sum
 }
 
 func Run() {
@@ -132,5 +163,4 @@ func Run() {
 
 	println("Part 2")
 	println(Part2(lines))
-	println("Day 2")
 }
