@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/jenspederm/advent-of-code/internal/day1"
+	"github.com/jenspederm/advent-of-code/internal/day2"
 )
 
 func main() {
@@ -13,6 +14,7 @@ func main() {
 
 	days := map[string]func(){
 		"1": day1.Run,
+		"2": day2.Run,
 	}
 	valid_days := []string{}
 	for day := range days {
