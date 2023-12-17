@@ -1,7 +1,9 @@
-package day1
+package day1_test
 
 import (
 	"testing"
+
+	"github.com/jenspederm/advent-of-code/internal/day1"
 )
 
 func TestDay1(t *testing.T) {
@@ -24,7 +26,7 @@ func TestDay1(t *testing.T) {
 		14,
 		76,
 	}
-	values := NewCalibrationValues(lines)
+	values := day1.NewCalibrationValues(lines)
 
 	if len(lines) != len(line_answers) {
 		t.Errorf("Expected %d, got %d", len(lines), len(line_answers))
@@ -33,10 +35,10 @@ func TestDay1(t *testing.T) {
 	for i := range values {
 		values[i].ReplaceWordDigits()
 		values[i].SumFirstAndLastDigit()
-		if values[i].value != line_answers[i] {
-			t.Errorf("Expected %d, got %d", line_answers[i], values[i].value)
+		if values[i].Value != line_answers[i] {
+			t.Errorf("Expected %d, got %d", line_answers[i], values[i].Value)
 		} else {
-			t.Logf("Expected %d, got %d", line_answers[i], values[i].value)
+			t.Logf("Expected %d, got %d", line_answers[i], values[i].Value)
 		}
 	}
 }
