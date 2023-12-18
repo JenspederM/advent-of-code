@@ -10,13 +10,9 @@ func Part1(lines []string) int {
 	numbers := s.getNumbers()
 
 	for _, number := range numbers {
-		isValid := s.CheckIsValidNumber(number)
-
-		if isValid {
+		if s.CheckIsValidNumber(number) {
 			sum += number.number
 		}
-
-		//println(number.number, isValid)
 	}
 
 	return sum

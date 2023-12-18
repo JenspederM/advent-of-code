@@ -47,12 +47,12 @@ func (s StringMatrix) Print(params ...string) {
 	}
 }
 
-func (s StringMatrix) getNumbers() []Number {
-	numbers := []Number{}
+func (s StringMatrix) getNumbers() []PartNumber {
+	numbers := []PartNumber{}
 	lastCharWasNumber := false
 
 	for i, line := range s.matrix {
-		number := newNumber()
+		number := newPartNumber()
 
 		for j := 0; j < len(line); j++ {
 			char := string(line[j])
@@ -62,14 +62,14 @@ func (s StringMatrix) getNumbers() []Number {
 			} else {
 				if lastCharWasNumber {
 					numbers = append(numbers, number)
-					number = newNumber()
+					number = newPartNumber()
 					lastCharWasNumber = false
 				}
 			}
 
 			if j == len(line)-1 && lastCharWasNumber {
 				numbers = append(numbers, number)
-				number = newNumber()
+				number = newPartNumber()
 				lastCharWasNumber = false
 			}
 		}
@@ -93,7 +93,7 @@ func (s StringMatrix) getAdjacent(position []int) [][]int {
 	}
 }
 
-func (s StringMatrix) getAllAdjacent(number Number) [][]int {
+func (s StringMatrix) getAllAdjacent(number PartNumber) [][]int {
 	allAdjacent := [][]int{}
 	for _, position := range number._positions {
 		posAdjacent := s.getAdjacent(position)
@@ -113,7 +113,7 @@ func (s StringMatrix) getAllAdjacent(number Number) [][]int {
 	return allAdjacent
 }
 
-func (s StringMatrix) CheckIsValidNumber(number Number) bool {
+func (s StringMatrix) CheckIsValidNumber(number PartNumber) bool {
 	allAdjacent := s.getAllAdjacent(number)
 	isValid := false
 	for _, adjacent := range allAdjacent {
