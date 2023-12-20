@@ -25,6 +25,22 @@ func (s StringMatrix) FromLines(lines []string) StringMatrix {
 	return StringMatrix{matrix: matrix, nrows: len(matrix), ncols: len(matrix[0])}
 }
 
+func (s StringMatrix) getAdjacent(position []int) [][]int {
+	nrows := s.nrows
+	ncols := s.ncols
+
+	return [][]int{
+		{utils.Max(position[0]-1, 0), position[1]},                             // up
+		{utils.Min(position[0]+1, nrows-1), position[1]},                       // down
+		{position[0], utils.Max(position[1]-1, 0)},                             // left
+		{position[0], utils.Min(position[1]+1, ncols-1)},                       // right
+		{utils.Max(position[0]-1, 0), utils.Max(position[1]-1, 0)},             // up-left
+		{utils.Max(position[0]-1, 0), utils.Min(position[1]+1, ncols-1)},       // up-right
+		{utils.Min(position[0]+1, nrows-1), utils.Max(position[1]-1, 0)},       // down-left
+		{utils.Min(position[0]+1, nrows-1), utils.Min(position[1]+1, ncols-1)}, // down-right
+	}
+}
+
 func (s StringMatrix) Print(params ...string) {
 	replace := false
 	original := ""
@@ -73,56 +89,20 @@ func (s StringMatrix) getNumbers() []PartNumber {
 				lastCharWasNumber = false
 			}
 		}
+
 	}
 	return numbers
 }
 
-func (s StringMatrix) getAdjacent(position []int) [][]int {
-	nrows := s.nrows
-	ncols := s.ncols
-
-	return [][]int{
-		{utils.Max(position[0]-1, 0), position[1]},                             // up
-		{utils.Min(position[0]+1, nrows-1), position[1]},                       // down
-		{position[0], utils.Max(position[1]-1, 0)},                             // left
-		{position[0], utils.Min(position[1]+1, ncols-1)},                       // right
-		{utils.Max(position[0]-1, 0), utils.Max(position[1]-1, 0)},             // up-left
-		{utils.Max(position[0]-1, 0), utils.Min(position[1]+1, ncols-1)},       // up-right
-		{utils.Min(position[0]+1, nrows-1), utils.Max(position[1]-1, 0)},       // down-left
-		{utils.Min(position[0]+1, nrows-1), utils.Min(position[1]+1, ncols-1)}, // down-right
-	}
-}
-
-func (s StringMatrix) getAllAdjacent(number PartNumber) [][]int {
-	allAdjacent := [][]int{}
-	for _, position := range number._positions {
-		posAdjacent := s.getAdjacent(position)
-		for _, adjacent := range posAdjacent {
-			partOfSelf := false
-			for _, pos := range number._positions {
-				if adjacent[0] == pos[0] && adjacent[1] == pos[1] {
-					partOfSelf = true
-					break
-				}
-			}
-			if !partOfSelf {
-				allAdjacent = append(allAdjacent, adjacent)
+func (s StringMatrix) GetGears() []Gear {
+	gears := []Gear{}
+	for i, line := range s.matrix {
+		for j := 0; j < len(line); j++ {
+			char := string(line[j])
+			if char == "*" {
+				gears = append(gears, newGear(i, j))
 			}
 		}
 	}
-	return allAdjacent
-}
-
-func (s StringMatrix) CheckIsValidNumber(number PartNumber) bool {
-	allAdjacent := s.getAllAdjacent(number)
-	isValid := false
-	for _, adjacent := range allAdjacent {
-		i := adjacent[0]
-		j := adjacent[1]
-		if s.matrix[i][j] != "." {
-			isValid = true
-			break
-		}
-	}
-	return isValid
+	return gears
 }

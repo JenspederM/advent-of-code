@@ -10,7 +10,7 @@ func Part1(lines []string) int {
 	numbers := s.getNumbers()
 
 	for _, number := range numbers {
-		if s.CheckIsValidNumber(number) {
+		if number.CheckIsValid(s) {
 			sum += number.number
 		}
 	}
@@ -19,7 +19,26 @@ func Part1(lines []string) int {
 }
 
 func Part2(lines []string) int {
-	return 0
+	s := StringMatrix{}.FromLines(lines)
+	sum := 0
+	gears := s.GetGears()
+	numbers := s.getNumbers()
+	validNumbers := []PartNumber{}
+
+	for _, number := range numbers {
+		if number.CheckIsValid(s) {
+			validNumbers = append(validNumbers, number)
+		}
+	}
+
+	for _, gear := range gears {
+		gearRatio := gear.CalculateRatio(s, validNumbers)
+		if gearRatio != -1 {
+			sum += gearRatio
+		}
+	}
+
+	return sum
 }
 
 func Run() {
