@@ -12,6 +12,13 @@ go run ./cmd/run/main.go -day 2
 ...
 ```
 
+Creating a new day:
+
+```
+# Create a new day 3
+go run ./cmd/new/main.go -day 3
+```
+
 Running tests:
 
 ```
