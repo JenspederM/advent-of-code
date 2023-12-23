@@ -17,6 +17,14 @@ type RangeElement struct {
 	rangeLength      int
 }
 
+func (res RangeElements) String() string {
+	str := ""
+	for _, re := range res {
+		str += re.String() + "\n"
+	}
+	return str
+}
+
 func (res RangeElements) GetDestination(source int) int {
 	for _, re := range res {
 		if re.InRange(source) {
@@ -146,11 +154,17 @@ func Parse(lines []string) ([]int, map[string]RangeElements) {
 		"temperatureToHumidityRange": temperatureToHumidityRange,
 		"humidityToLocationRange":    humidityToLocationRange,
 	}
-
 }
 
-func Part1(lines []string) int {
-	seeds, ranges := Parse(lines)
+func SplitSeeds(seeds []int) [][]int {
+	seedGroups := [][]int{}
+	for i := 0; i < len(seeds); i += 2 {
+		seedGroups = append(seedGroups, seeds[i:i+2])
+	}
+	return seedGroups
+}
+
+func CalculateMinLocation(seeds []int, ranges map[string]RangeElements) int {
 	seedToSoilRange := ranges["seedToSoilRange"]
 	soilToFertilizerRange := ranges["soilToFertilizerRange"]
 	fertilizerToWaterRange := ranges["fertilizerToWaterRange"]
@@ -159,31 +173,44 @@ func Part1(lines []string) int {
 	temperatureToHumidityRange := ranges["temperatureToHumidityRange"]
 	humidityToLocationRange := ranges["humidityToLocationRange"]
 
-	humidities := []int{}
-	soil := 0
-	for _, seed := range seeds {
-		soil = seedToSoilRange.GetDestination(seed)
-		soil = soilToFertilizerRange.GetDestination(soil)
-		soil = fertilizerToWaterRange.GetDestination(soil)
-		soil = waterToLightRange.GetDestination(soil)
-		soil = lightToTemperatureRange.GetDestination(soil)
-		soil = temperatureToHumidityRange.GetDestination(soil)
-		soil = humidityToLocationRange.GetDestination(soil)
-		humidities = append(humidities, soil)
-	}
+	minLocation := math.MaxInt64
+	tmp := 0
 
-	minHumidity := math.MaxInt64
-	for _, humidity := range humidities {
-		if humidity < minHumidity {
-			minHumidity = humidity
+	for _, seed := range seeds {
+		tmp = seedToSoilRange.GetDestination(seed)
+		tmp = soilToFertilizerRange.GetDestination(tmp)
+		tmp = fertilizerToWaterRange.GetDestination(tmp)
+		tmp = waterToLightRange.GetDestination(tmp)
+		tmp = lightToTemperatureRange.GetDestination(tmp)
+		tmp = temperatureToHumidityRange.GetDestination(tmp)
+		location := humidityToLocationRange.GetDestination(tmp)
+		if location < minLocation {
+			minLocation = location
 		}
 	}
 
-	return minHumidity
+	return minLocation
+}
+
+func Part1(lines []string) int {
+	seeds, ranges := Parse(lines)
+	return CalculateMinLocation(seeds, ranges)
 }
 
 func Part2(lines []string) int {
-	return 0
+	seeds, ranges := Parse(lines)
+
+	seedPairs := SplitSeeds(seeds)
+	newSeeds := []int{}
+	for _, seedPair := range seedPairs {
+		seedStart := seedPair[0]
+		seedRange := seedPair[1]
+		for i := 0; i < seedRange; i++ {
+			newSeeds = append(newSeeds, seedStart+i)
+		}
+	}
+
+	return CalculateMinLocation(newSeeds, ranges)
 }
 
 func Run() {

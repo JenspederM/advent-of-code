@@ -52,7 +52,7 @@ func TestRun(t *testing.T) {
 	})
 	t.Run("Part 2", func(t *testing.T) {
 		sum := day5.Part2(testData)
-		expected := 0
+		expected := 46
 		if sum != expected {
 			t.Errorf("Expected %d, got %d", expected, sum)
 		}
