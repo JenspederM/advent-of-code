@@ -25,6 +25,18 @@ func ParseInput(lines []string) ([]int, []int) {
 	return times, distances
 }
 
+func ConcatListToInt(list []int) int {
+	str := ""
+	for i := range list {
+		str += strings.TrimSpace(fmt.Sprint(list[i]))
+	}
+	n, err := strconv.Atoi(str)
+	if err != nil {
+		panic("Paniced when parsing " + str + " " + err.Error())
+	}
+	return n
+}
+
 func Part1(lines []string) int {
 	times, distances := ParseInput(lines)
 
@@ -37,22 +49,9 @@ func Part1(lines []string) int {
 
 func Part2(lines []string) int {
 	times, distances := ParseInput(lines)
-
-	T := ""
-	D := ""
-	for i := range times {
-		T += strings.TrimSpace(fmt.Sprint(times[i]))
-		D += strings.TrimSpace(fmt.Sprint(distances[i]))
-	}
-	t, err := strconv.Atoi(T)
-	if err != nil {
-		panic("Paniced when parsing T on " + T + " " + D + " " + err.Error())
-	}
-	d, err := strconv.Atoi(D)
-	if err != nil {
-		panic("Paniced when parsing D on " + T + " " + D + " " + err.Error())
-	}
-	return SumForTime(t, d)
+	fullTimes := ConcatListToInt(times)
+	fullDistances := ConcatListToInt(distances)
+	return SumForTime(fullTimes, fullDistances)
 }
 
 func Run() {
@@ -60,7 +59,7 @@ func Run() {
 
 	println()
 	println("##############################")
-	println("#            Day 5           #")
+	println("#            Day 6           #")
 	println("##############################")
 	println()
 	println("Part 1")
