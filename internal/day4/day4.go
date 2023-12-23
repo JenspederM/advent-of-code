@@ -19,14 +19,6 @@ func NewCard(id int, name string, winning []int, own []int) Card {
 	return Card{id: id, name: name, winning: winning, own: own}
 }
 
-func (c Card) String() string {
-	return c.name
-}
-
-func (c Card) Equals(other Card) bool {
-	return c.name == other.name
-}
-
 func (c Card) Copy() Card {
 	return Card{id: c.id, name: c.name, winning: c.winning, own: c.own}
 }
