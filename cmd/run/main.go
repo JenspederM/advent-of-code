@@ -9,6 +9,7 @@ import (
 	"github.com/jenspederm/advent-of-code/internal/day3"
 	"github.com/jenspederm/advent-of-code/internal/day4"
 	"github.com/jenspederm/advent-of-code/internal/day5"
+	"github.com/jenspederm/advent-of-code/internal/day6"
 )
 
 func main() {
@@ -21,6 +22,7 @@ func main() {
 		"3": day3.Run,
 		"4": day4.Run,
 		"5": day5.Run,
+		"6": day6.Run,
 	}
 	valid_days := []string{}
 	for day := range days {
