@@ -7,8 +7,9 @@ import (
 )
 
 type Node struct {
-	Left  string
-	Right string
+	Left    string
+	Right   string
+	isStart bool
 }
 
 type Tree map[string]Node
@@ -30,11 +31,12 @@ func NewTree(data []string) Tree {
 		splits := strings.Split(value, ", ")
 		src := splits[0]
 		dest := splits[1]
+		isStart := strings.HasSuffix(name, "A")
 		src = strings.Replace(src, "(", "", -1)
 		src = strings.Replace(src, ")", "", -1)
 		dest = strings.Replace(dest, "(", "", -1)
 		dest = strings.Replace(dest, ")", "", -1)
-		tree[name] = Node{src, dest}
+		tree[name] = Node{src, dest, isStart}
 	}
 	return tree
 }

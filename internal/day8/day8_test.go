@@ -26,6 +26,18 @@ func TestRun(t *testing.T) {
 		"ZZZ = (ZZZ, ZZZ)",
 	}
 
+	part2_test := []string{
+		"LR",
+		"11A = (11B, XXX)",
+		"11B = (XXX, 11Z)",
+		"11Z = (11B, XXX)",
+		"22A = (22B, XXX)",
+		"22B = (22C, 22C)",
+		"22C = (22Z, 22Z)",
+		"22Z = (22B, 22B)",
+		"XXX = (XXX, XXX)",
+	}
+
 	t.Run("Part 1", func(t *testing.T) {
 		sum := day8.Part1(test1)
 		expected := 2
@@ -40,8 +52,8 @@ func TestRun(t *testing.T) {
 	})
 
 	t.Run("Part 2", func(t *testing.T) {
-		sum := day8.Part2(test1)
-		expected := 0
+		sum := day8.Part2(part2_test)
+		expected := 6
 		if sum != expected {
 			t.Errorf("Expected %d, got %d", expected, sum)
 		}
