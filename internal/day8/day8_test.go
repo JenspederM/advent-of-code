@@ -28,6 +28,7 @@ func TestRun(t *testing.T) {
 
 	part2_test := []string{
 		"LR",
+		"",
 		"11A = (11B, XXX)",
 		"11B = (XXX, 11Z)",
 		"11Z = (11B, XXX)",
