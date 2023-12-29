@@ -7,25 +7,41 @@ import (
 )
 
 func TestRun(t *testing.T) {
-	testData := []string{
-		"Game 1: 3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green",
-		"Game 2: 1 blue, 2 green; 3 green, 4 blue, 1 red; 1 green, 1 blue",
-		"Game 3: 8 green, 6 blue, 20 red; 5 blue, 4 red, 13 green; 5 green, 1 red",
-		"Game 4: 1 green, 3 red, 6 blue; 3 green, 6 red; 3 green, 15 blue, 14 red",
-		"Game 5: 6 red, 1 blue, 3 green; 2 blue, 1 red, 2 green",
+	test1 := []string{
+		"RL",
+		"",
+		"AAA = (BBB, CCC)",
+		"BBB = (DDD, EEE)",
+		"CCC = (ZZZ, GGG)",
+		"DDD = (DDD, DDD)",
+		"EEE = (EEE, EEE)",
+		"GGG = (GGG, GGG)",
+		"ZZZ = (ZZZ, ZZZ)",
+	}
+	test2 := []string{
+		"LLR",
+		"",
+		"AAA = (BBB, BBB)",
+		"BBB = (AAA, ZZZ)",
+		"ZZZ = (ZZZ, ZZZ)",
 	}
 
 	t.Run("Part 1", func(t *testing.T) {
-		sum := day8.Part1(testData)
-		expected := 8
+		sum := day8.Part1(test1)
+		expected := 2
 		if sum != expected {
-			t.Errorf("Expected %d, got %d", expected, sum)
+			t.Errorf("Test 1: Expected %d, got %d", expected, sum)
+		}
+		sum2 := day8.Part1(test2)
+		expected2 := 6
+		if sum2 != expected2 {
+			t.Errorf("Test 2: Expected %d, got %d", expected2, sum2)
 		}
 	})
 
 	t.Run("Part 2", func(t *testing.T) {
-		sum := day8.Part2(testData)
-		expected := 2286
+		sum := day8.Part2(test1)
+		expected := 0
 		if sum != expected {
 			t.Errorf("Expected %d, got %d", expected, sum)
 		}
