@@ -2,6 +2,7 @@ package day8
 
 import (
 	"fmt"
+	"math"
 	"strings"
 
 	"github.com/jenspederm/advent-of-code/internal/utils"
@@ -118,14 +119,11 @@ func (t Tree) TakeStep(current []string, direction byte, verbose ...bool) ([]str
 		fmt.Printf("%v %v", current, direction)
 	}
 	newCurrent := []string{}
-	if direction == byte('L') {
-		for _, c := range current {
-			steps++
+	for _, c := range current {
+		steps++
+		if direction == byte('L') {
 			newCurrent = append(newCurrent, t[c].Left)
-		}
-	} else {
-		for _, c := range current {
-			steps++
+		} else {
 			newCurrent = append(newCurrent, t[c].Right)
 		}
 	}
@@ -138,11 +136,73 @@ func Part1(lines []string) int {
 	return tree.Walk(directions, "AAA")
 }
 
+func gcd(a, b int) int {
+	if b == 0 {
+		return a
+	}
+	return gcd(b, a%b)
+}
+
+func lcm(a int, b int) int {
+	return a * b / gcd(a, b)
+}
+
+type Array []int
+
+type ReducerFn func(prev int, next int) int
+
+func (arr Array) Reduce(fn ReducerFn, i int) int {
+	prev := i
+	for _, v := range arr {
+		prev = fn(prev, v)
+	}
+	return prev
+}
+
 func Part2(lines []string) int {
 	directions := lines[0]
 	tree := NewTree(lines[2:])
-	locations := []string{"11A", "22A"}
-	return tree.Walk2(directions, locations)
+	startNodes := []string{}
+	for k := range tree {
+		if strings.HasSuffix(k, "A") {
+			startNodes = append(startNodes, k)
+		}
+	}
+
+	nStart := len(startNodes)
+	nFound := 0
+	count := 0
+	values := Array{}
+	for nFound < nStart {
+		for _, dir := range directions {
+			for i := 0; i < len(startNodes); i++ {
+				if dir == 'L' {
+					startNodes[i] = tree[startNodes[i]].Left
+				} else {
+					startNodes[i] = tree[startNodes[i]].Right
+				}
+			}
+			count++
+			for i, node := range startNodes {
+				if strings.HasSuffix(node, "Z") {
+					nFound += 1
+					startNodes = append(startNodes[:i], startNodes[i+1:]...)
+					values = append(values, count)
+				}
+			}
+		}
+	}
+
+	minCommonMultiple := math.MaxInt32
+	for i := 0; i < len(values); i++ {
+		for j := i + 1; j < len(values); j++ {
+			minCommonMultiple = utils.Min(minCommonMultiple, lcm(values[i], values[j]))
+		}
+	}
+
+	return values.Reduce(func(prev int, next int) int {
+		return lcm(prev, next)
+	}, 1)
 }
 
 func Run() {
