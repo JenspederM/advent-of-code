@@ -29,7 +29,7 @@ func CardFromLine(line string) Card {
 	if len(cardData) != 2 {
 		panic("Invalid cardData")
 	}
-	cardId, _ := strconv.Atoi(strings.Split(cardData[0], " ")[1])
+	cardId, _ := strconv.Atoi(strings.Join(strings.Split(strings.TrimSpace(cardData[0]), " ")[1:], ""))
 	card := strings.Split(cardData[1], " | ")
 	if len(card) != 2 {
 		panic("Invalid card")
@@ -75,6 +75,7 @@ func Part2(lines []string) int {
 		cards = append(cards, card)
 	}
 	i := 0
+
 	for len(cards) > 0 {
 		if len(cards) == 0 {
 			break
