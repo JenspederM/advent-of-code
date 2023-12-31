@@ -37,8 +37,6 @@ func TestDay1(t *testing.T) {
 		values[i].SumFirstAndLastDigit()
 		if values[i].Value != line_answers[i] {
 			t.Errorf("Expected %d, got %d", line_answers[i], values[i].Value)
-		} else {
-			t.Logf("Expected %d, got %d", line_answers[i], values[i].Value)
 		}
 	}
 }

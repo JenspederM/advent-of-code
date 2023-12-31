@@ -1,6 +1,7 @@
 package day4
 
 import (
+	"strconv"
 	"strings"
 
 	"github.com/cloudflare/cfssl/log"
@@ -28,14 +29,13 @@ func CardFromLine(line string) Card {
 	if len(cardData) != 2 {
 		panic("Invalid cardData")
 	}
-	cardId := utils.NumbersFromLine(cardData[0])[0]
+	cardId, _ := strconv.Atoi(strings.Split(cardData[0], " ")[1])
 	card := strings.Split(cardData[1], " | ")
 	if len(card) != 2 {
 		panic("Invalid card")
 	}
 	winning := utils.NumbersFromLine(card[0])
 	own := utils.NumbersFromLine(card[1])
-
 	return NewCard(cardId, cardData[0], winning, own)
 }
 

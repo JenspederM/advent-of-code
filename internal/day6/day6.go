@@ -39,7 +39,6 @@ func ConcatListToInt(list []int) int {
 
 func Part1(lines []string) int {
 	times, distances := ParseInput(lines)
-
 	sum := 1
 	for i := range times {
 		sum *= SumForTime(times[i], distances[i])

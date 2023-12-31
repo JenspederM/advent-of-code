@@ -12,8 +12,10 @@ func NumbersFromLine(line string, sep ...string) []int {
 	}
 	seq := []int{}
 	for _, l := range strings.Split(strings.TrimSpace(line), seperator) {
-		s, _ := strconv.Atoi(l)
-		seq = append(seq, s)
+		s, err := strconv.Atoi(l)
+		if err == nil {
+			seq = append(seq, s)
+		}
 	}
 	return seq
 }
