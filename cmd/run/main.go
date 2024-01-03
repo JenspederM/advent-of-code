@@ -2,7 +2,6 @@ package main
 
 import (
 	"flag"
-	"strings"
 
 	"github.com/jenspederm/advent-of-code/internal/day1"
 	"github.com/jenspederm/advent-of-code/internal/day2"
@@ -16,7 +15,7 @@ import (
 )
 
 func main() {
-	day := flag.String("day", "1", "Day to run")
+	day := flag.String("day", "", "Day to run")
 	flag.Parse()
 
 	days := map[string]func(){
@@ -30,18 +29,11 @@ func main() {
 		"8": day8.Run,
 		"9": day9.Run,
 	}
-	valid_days := []string{}
-	for day := range days {
-		valid_days = append(valid_days, day)
-	}
-	valid_msg := "Valid days are: " + strings.Join(valid_days, ", ")
 
 	if *day == "" {
-		panic("No day specified. " + valid_msg)
-	}
-
-	if _, ok := days[*day]; !ok {
-		panic("Invalid day specified: " + *day + ". " + valid_msg)
+		for _, day := range days {
+			day()
+		}
 	}
 
 	println("Running day " + *day)

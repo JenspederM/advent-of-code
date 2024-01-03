@@ -6,12 +6,12 @@ import (
 
 func Part1(lines []string) int {
 	c := NewCamelCards(lines)
-	return c.Sum(false)
+	return c.Sum()
 }
 
 func Part2(lines []string) int {
 	c := NewCamelCards(lines, true)
-	return c.Sum(true)
+	return c.Sum()
 }
 
 func Run() {
