@@ -40,8 +40,11 @@ func main() {
 		for _, day := range days {
 			day()
 		}
+	} else {
+		if _, ok := days[*day]; !ok {
+			panic("Day " + *day + " not found")
+		}
+		println("Running day " + *day)
+		days[*day]()
 	}
-
-	println("Running day " + *day)
-	days[*day]()
 }
