@@ -83,8 +83,9 @@ func Part2(lines []string) int {
 			newLava = newLava + _lava + "?"
 			newSprings = newSprings + _springs + ","
 		}
-		springs := toIntSlice(strings.Split(strings.TrimSuffix(newSprings, ","), ","))
-		sum += count(strings.Split(strings.TrimSuffix(newLava, "?"), ""), springs)
+		newLava = strings.TrimSuffix(newLava, "?")
+		newSprings = strings.TrimSuffix(newSprings, ",")
+		sum += count(strings.Split(newLava, ""), toIntSlice(strings.Split(newSprings, ",")))
 	}
 	return sum
 }
