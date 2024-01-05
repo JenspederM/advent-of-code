@@ -7,13 +7,15 @@ import (
 )
 
 type Point struct {
-	X int
-	Y int
+	I int
+	J int
 }
 
 type Graph struct {
 	Nodes map[Point]Node
 	Start Point
+	nrows int
+	ncols int
 }
 
 type NodeType string
@@ -22,6 +24,10 @@ type Node struct {
 	Value      NodeType
 	Point      Point
 	Neighbours []Point
+}
+
+type Polygon struct {
+	Points []Point
 }
 
 const (
@@ -41,46 +47,46 @@ func NewNode(value string, point Point) Node {
 		return Node{Value: Ground, Point: point}
 	case "|":
 		neighbours := []Point{
-			{point.X, point.Y - 1},
-			{point.X, point.Y + 1},
+			{point.I - 1, point.J},
+			{point.I + 1, point.J},
 		}
 		return Node{Value: Vertical, Point: point, Neighbours: neighbours}
 	case "-":
 		neighbours := []Point{
-			{point.X - 1, point.Y},
-			{point.X + 1, point.Y},
+			{point.I, point.J - 1},
+			{point.I, point.J + 1},
 		}
 		return Node{Value: Horizontal, Point: point, Neighbours: neighbours}
 	case "L":
 		neighbours := []Point{
-			{point.X + 1, point.Y},
-			{point.X, point.Y - 1},
+			{point.I, point.J + 1},
+			{point.I - 1, point.J},
 		}
 		return Node{Value: NorthEast, Point: point, Neighbours: neighbours}
 	case "J":
 		neighbours := []Point{
-			{point.X, point.Y - 1},
-			{point.X - 1, point.Y},
+			{point.I - 1, point.J},
+			{point.I, point.J - 1},
 		}
 		return Node{Value: NorthWest, Point: point, Neighbours: neighbours}
 	case "7":
 		neighbours := []Point{
-			{point.X - 1, point.Y},
-			{point.X, point.Y + 1},
+			{point.I, point.J - 1},
+			{point.I + 1, point.J},
 		}
 		return Node{Value: SouthEast, Point: point, Neighbours: neighbours}
 	case "F":
 		neighbours := []Point{
-			{point.X, point.Y + 1},
-			{point.X + 1, point.Y},
+			{point.I + 1, point.J},
+			{point.I, point.J + 1},
 		}
 		return Node{Value: SouthWest, Point: point, Neighbours: neighbours}
 	case "S":
 		neighbours := []Point{
-			{point.X, point.Y - 1},
-			{point.X, point.Y + 1},
-			{point.X - 1, point.Y},
-			{point.X + 1, point.Y},
+			{point.I - 1, point.J},
+			{point.I + 1, point.J},
+			{point.I, point.J - 1},
+			{point.I, point.J + 1},
 		}
 		return Node{Value: Start, Point: point, Neighbours: neighbours}
 	default:
@@ -89,17 +95,15 @@ func NewNode(value string, point Point) Node {
 }
 
 func NewGraph(lines []string) Graph {
-	g := Graph{}
+	g := Graph{nrows: len(lines), ncols: len(lines[0])}
 	tiles := map[Point]Node{}
 	start := Point{}
 	for i := range lines {
 		for j := range lines[i] {
-			tile := NewNode(string(lines[i][j]), Point{j, i})
-			if tile.Value != Ground {
-				tiles[Point{j, i}] = tile
-			}
+			tile := NewNode(string(lines[i][j]), Point{i, j})
+			tiles[Point{i, j}] = tile
 			if tile.Value == Start {
-				start = Point{j, i}
+				start = Point{i, j}
 			}
 		}
 	}
@@ -108,26 +112,31 @@ func NewGraph(lines []string) Graph {
 	return g
 }
 
-func (m Graph) String() string {
-	str := fmt.Sprintf("Start: %v\n\n", m.Start)
-	for _, node := range m.Nodes {
+func (p Point) Compare(other Point) bool {
+	return p.I == other.I && p.J == other.J
+}
+
+func (g Graph) String() string {
+	str := fmt.Sprintf("Start: %v\n\n", g.Start)
+	for _, node := range g.Nodes {
 		str += fmt.Sprintf("%v (%v) -> %v\n", node, node.Point, node.Neighbours)
 	}
 	return str
 }
 
 func (g Graph) Walk(prev Point, current Point, path []Point) []Point {
-	if len(g.Nodes[current].Neighbours) == 0 || g.Start.X == current.X && g.Start.Y == current.Y {
+	currentNode := g.Nodes[current]
+	if len(currentNode.Neighbours) == 0 || currentNode.Value == Ground || g.Start.Compare(current) {
 		return path
 	}
-	for _, n := range g.Nodes[current].Neighbours {
-		if n.X == prev.X && n.Y == prev.Y {
+	for _, next := range currentNode.Neighbours {
+		if prev.Compare(next) {
 			continue
 		}
-		return g.Walk(current, n, append(path, current))
+		return g.Walk(current, next, append(path, current))
 	}
 	path = append(path, current)
-	return g.Walk(current, g.Nodes[current].Neighbours[0], path)
+	return g.Walk(current, currentNode.Neighbours[0], path)
 }
 
 func (g Graph) GetAllPaths() [][]Point {
@@ -138,6 +147,47 @@ func (g Graph) GetAllPaths() [][]Point {
 		paths = append(paths, path)
 	}
 	return paths
+}
+
+func (g Graph) PrintMatrix(contained []Point) string {
+	str := fmt.Sprintf("Start: %v\n\n", g.Start)
+
+	for i := 0; i < g.nrows; i++ {
+		for j := 0; j < g.ncols; j++ {
+			isContained := false
+			for _, point := range contained {
+				if point.Compare(Point{i, j}) {
+					isContained = true
+				}
+			}
+			if isContained {
+				str += "I"
+			} else {
+				str += fmt.Sprintf("%v", g.Nodes[Point{i, j}].Value)
+			}
+		}
+		str += "\n"
+	}
+	//println(str)
+	return str
+}
+
+func (p Polygon) Contains(point Point) bool {
+	for _, pp := range p.Points {
+		if pp.I == point.I && pp.J == point.J {
+			return false
+		}
+	}
+	// https://stackoverflow.com/questions/217578/how-can-i-determine-whether-a-2d-point-is-within-a-polygon
+	inside := false
+	for i := 0; i < len(p.Points); i++ {
+		j := (i + 1) % len(p.Points)
+		if ((p.Points[i].I > point.I) != (p.Points[j].I > point.I)) &&
+			(point.J < (p.Points[j].J-p.Points[i].J)*(point.I-p.Points[i].I)/(p.Points[j].I-p.Points[i].I)+p.Points[i].J) {
+			inside = !inside
+		}
+	}
+	return inside
 }
 
 func Part1(lines []string) int {
@@ -155,8 +205,26 @@ func Part1(lines []string) int {
 }
 
 func Part2(lines []string) int {
-	sum := 0
-	return sum
+	g := NewGraph(lines)
+	paths := g.GetAllPaths()
+	longestPath := []Point{}
+
+	for _, path := range paths {
+		if len(path) > len(longestPath) {
+			longestPath = path
+		}
+	}
+
+	polygon := Polygon{Points: longestPath}
+	contained := []Point{}
+	for _, node := range g.Nodes {
+		if polygon.Contains(node.Point) {
+			contained = append(contained, node.Point)
+		}
+	}
+
+	g.PrintMatrix(contained)
+	return len(contained)
 }
 
 func Run() {
