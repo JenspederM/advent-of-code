@@ -67,15 +67,25 @@ func count(lava []string, springs []int) int {
 func Part1(lines []string) int {
 	sum := 0
 	for _, line := range lines {
-		lava, _springs, _ := strings.Cut(line, " ")
+		_lava, _springs, _ := strings.Cut(line, " ")
 		springs := toIntSlice(strings.Split(_springs, ","))
-		sum += count(strings.Split(lava, ""), springs)
+		sum += count(strings.Split(_lava, ""), springs)
 	}
 	return sum
 }
 
 func Part2(lines []string) int {
 	sum := 0
+	for _, line := range lines {
+		_lava, _springs, _ := strings.Cut(line, " ")
+		newLava, newSprings := "", ""
+		for i := 0; i < 5; i++ {
+			newLava = newLava + _lava + "?"
+			newSprings = newSprings + _springs + ","
+		}
+		springs := toIntSlice(strings.Split(strings.TrimSuffix(newSprings, ","), ","))
+		sum += count(strings.Split(strings.TrimSuffix(newLava, "?"), ""), springs)
+	}
 	return sum
 }
 
