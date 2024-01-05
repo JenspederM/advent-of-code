@@ -6,7 +6,23 @@ import (
 	"github.com/jenspederm/advent-of-code/internal/utils"
 )
 
+type Point struct {
+	X int
+	Y int
+}
+
+type Graph struct {
+	Nodes map[Point]Node
+	Start Point
+}
+
 type NodeType string
+
+type Node struct {
+	Value      NodeType
+	Point      Point
+	Neighbours []Point
+}
 
 const (
 	Ground     NodeType = "."
@@ -18,12 +34,6 @@ const (
 	SouthWest  NodeType = "F"
 	Start      NodeType = "S"
 )
-
-type Node struct {
-	Value      NodeType
-	Point      Point
-	Neighbours []Point
-}
 
 func NewNode(value string, point Point) Node {
 	switch value {
@@ -78,20 +88,6 @@ func NewNode(value string, point Point) Node {
 	}
 }
 
-func (t Node) String() string {
-	return string(t.Value)
-}
-
-type Point struct {
-	X int
-	Y int
-}
-
-type Graph struct {
-	Nodes map[Point]Node
-	Start Point
-}
-
 func NewGraph(lines []string) Graph {
 	g := Graph{}
 	tiles := map[Point]Node{}
@@ -120,7 +116,7 @@ func (m Graph) String() string {
 	return str
 }
 
-func Walk(g Graph, prev Point, current Point, path []Point) []Point {
+func (g Graph) Walk(prev Point, current Point, path []Point) []Point {
 	if len(g.Nodes[current].Neighbours) == 0 || g.Start.X == current.X && g.Start.Y == current.Y {
 		return path
 	}
@@ -128,21 +124,26 @@ func Walk(g Graph, prev Point, current Point, path []Point) []Point {
 		if n.X == prev.X && n.Y == prev.Y {
 			continue
 		}
-		return Walk(g, current, n, append(path, current))
+		return g.Walk(current, n, append(path, current))
 	}
 	path = append(path, current)
-	return Walk(g, current, g.Nodes[current].Neighbours[0], path)
+	return g.Walk(current, g.Nodes[current].Neighbours[0], path)
+}
+
+func (g Graph) GetAllPaths() [][]Point {
+	paths := [][]Point{}
+	start := g.Start
+	for _, n := range g.Nodes[start].Neighbours {
+		path := g.Walk(start, n, []Point{start})
+		paths = append(paths, path)
+	}
+	return paths
 }
 
 func Part1(lines []string) int {
 	sum := 0
 	g := NewGraph(lines)
-	paths := [][]Point{}
-	start := g.Start
-	for _, n := range g.Nodes[start].Neighbours {
-		path := Walk(g, start, n, []Point{start})
-		paths = append(paths, path)
-	}
+	paths := g.GetAllPaths()
 
 	for _, path := range paths {
 		if len(path) > sum {
