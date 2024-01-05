@@ -14,13 +14,6 @@ func TestRun(t *testing.T) {
 		".L-J.",
 		".....",
 	}
-	testData2 := []string{
-		"..F7.",
-		".FJ|.",
-		"SJ.L7",
-		"|F--J",
-		"LJ...",
-	}
 
 	t.Run("Part 1", func(t *testing.T) {
 		sum := day10.Part1(testData)
@@ -29,7 +22,13 @@ func TestRun(t *testing.T) {
 			t.Errorf("Test1: Expected %d, got %d", expected, sum)
 		}
 
-		sum = day10.Part1(testData2)
+		sum = day10.Part1([]string{
+			"..F7.",
+			".FJ|.",
+			"SJ.L7",
+			"|F--J",
+			"LJ...",
+		})
 		expected = 8
 		if sum != expected {
 			t.Errorf("Test2: Expected %d, got %d", expected, sum)
