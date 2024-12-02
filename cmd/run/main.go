@@ -7,6 +7,7 @@ import (
 	"github.com/jenspederm/advent-of-code/internal/day10"
 	"github.com/jenspederm/advent-of-code/internal/day11"
 	"github.com/jenspederm/advent-of-code/internal/day12"
+	"github.com/jenspederm/advent-of-code/internal/day13"
 	"github.com/jenspederm/advent-of-code/internal/day2"
 	"github.com/jenspederm/advent-of-code/internal/day3"
 	"github.com/jenspederm/advent-of-code/internal/day4"
@@ -34,6 +35,7 @@ func main() {
 		"10": day10.Run,
 		"11": day11.Run,
 		"12": day12.Run,
+		"13": day13.Run,
 	}
 
 	if *day == "" {
