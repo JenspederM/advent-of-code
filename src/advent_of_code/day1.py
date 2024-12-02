@@ -6,7 +6,8 @@ def main():
     lines = data_loader("day1.txt")
     pairs = [[int(v) for v in re.split(" +", line)] for line in lines]
     columns = [sorted(location_id) for location_id in zip(*pairs)]
-    print(sum([max(a, b) - min(a, b) for a, b in zip(*columns)]))
+    print("Part 1:", sum([max(a, b) - min(a, b) for a, b in zip(*columns)]))
+    print("Part 2:", sum([x * columns[1].count(x) for x in columns[0]]))
 
 
 if __name__ == "__main__":
