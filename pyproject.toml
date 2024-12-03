@@ -7,7 +7,9 @@ authors = [
     { name = "Jens Peder Meldgaard", email = "jenspederm@gmail.com" }
 ]
 requires-python = ">=3.11"
-dependencies = []
+dependencies = [
+    "pytest>=8.3.4",
+]
 
 [project.scripts]
 advent-of-code = "advent_of_code:main"
