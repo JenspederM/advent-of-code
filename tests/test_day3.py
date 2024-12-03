@@ -43,12 +43,3 @@ def test_part2_open_ended_mid():
     from advent_of_code.day3 import solve
 
     assert solve(test, part2=True) == expected
-
-
-def test_part2_open_ended_mid():
-    test = "mul()"
-    expected = 0
-
-    from advent_of_code.day3 import solve
-
-    assert solve(test, part2=True) == expected
